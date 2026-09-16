@@ -1,2 +1,1 @@
-/* Nog geen uitlegvideo's voor dit hoofdstuk. */
-window.VIDEOS = [];
+window.VIDEOS = ["breukkeerdelen-n1","breukkeerdelen-n2","breukkeerdelen-n3","breukoptellen-n1","breukoptellen-n2","breukoptellen-n3","breukvereenvoudigen-n1","breukvereenvoudigen-n2","breukvereenvoudigen-n3","dubbelhaakjes-n1","dubbelhaakjes-n2","dubbelhaakjes-n3","haakjes-n1","haakjes-n2","haakjes-n3","haakjescombi-n1","haakjescombi-n2","haakjescombi-n3","machtenproduct-n1","machtenproduct-n2","machtenproduct-n3","machtherleiden-n1","machtherleiden-n2","machtherleiden-n3","wetenschappelijk-n1","wetenschappelijk-n2","wetenschappelijk-n3"];
