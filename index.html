@@ -424,7 +424,7 @@ sup{font-size:.72em;line-height:0}
    build klaar, dan herladen we één keer onder ?v=<build> — een URL die niet in de cache
    zit. Offline of bij een fout: niets doen, de app werkt gewoon door. ------------------ */
 (function(){
-  var BUILD = "6a3a019b1d";          // wordt bij deploy vervangen door de echte build-hash
+  var BUILD = "adf0f19124";          // wordt bij deploy vervangen door de echte build-hash
   if(BUILD === "dev") return; // lokaal/ongestempeld: niet checken
   try{
     var hier = new URL(location.href);
@@ -710,11 +710,11 @@ sup{font-size:.72em;line-height:0}
 </div>
 <div id="confetti"></div>
 
-<script src="content.js?v=6a3a019b1d"></script>
-<script src="ezels.js?v=6a3a019b1d"></script>
-<script src="video/manifest.js?v=6a3a019b1d"></script>
+<script src="content.js?v=adf0f19124"></script>
+<script src="ezels.js?v=adf0f19124"></script>
+<script src="video/manifest.js?v=adf0f19124"></script>
 <!-- math.js alleen voor wiskunde-vakken (synchroon, geen 404 bij talen) -->
-<script>if(window.VAK&&window.VAK.wiskunde)document.write('<scr'+'ipt src="math.js?v=6a3a019b1d"><\/scr'+'ipt>');</script>
+<script>if(window.VAK&&window.VAK.wiskunde)document.write('<scr'+'ipt src="math.js?v=adf0f19124"><\/scr'+'ipt>');</script>
 <script>
 /* =====================================================================
    App-engine — adaptief leermodel
@@ -1094,7 +1094,19 @@ function scoreVraag(ok,q,juist,gekozen){
   feedback(ok,q,juist,gekozen);
 }
 function eqCheck(val, antwoord, vars){
-  if(window.equiv) return window.equiv(val, antwoord, vars||[]);            // wiskunde: numerieke gelijkwaardigheid
+  if(window.equiv){
+    if(window.equiv(val, antwoord, vars||[])) return true;                  // wiskunde: numerieke gelijkwaardigheid
+    /* Eenheid-tolerantie (natuurkunde). Een natuurkundeleerling schrijft de eenheid mee:
+       "26 cm3", "8,5 g/cm3", "1000 g". equiv() leest die letters als variabelen en keurt het af.
+       Is het VERWACHTE antwoord puur numeriek, dan knippen we een eenheid-staart weg en checken
+       het getal alsnog. Bij wiskunde gebeurt dit nooit, want dáár staan letters in het antwoord
+       zelf en slaat de guard hieronder over. */
+    if(!/[a-zA-Z]/.test(String(antwoord ?? ""))){
+      const m = String(val ?? "").trim().match(/^([\d\s.,+\-*/^()·−]*?\d)\s*[a-zA-Z][a-zA-Z0-9²³·/^ ]*$/);
+      if(m && window.equiv(m[1], antwoord, [])) return true;
+    }
+    return false;
+  }
   // tekst-vak (geen math.js): normaliseer + sta alternatieven met | toe via de bestaande checkAntwoord
   const st = checkAntwoord(val, String(antwoord ?? "").split("|")).status;  // guard: ontbrekend antwoord → "fout", niet "null"
   return st==="goed" || st==="accent";
